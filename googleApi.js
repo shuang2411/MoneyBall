@@ -51,3 +51,10 @@ function signInWithGoogle(){
       });
       
 }
+
+
+function logOut(params) {
+    firebase.auth().signOut().then(() => {
+        console.log("user has signed out!");
+      })
+}

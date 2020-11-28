@@ -43,5 +43,32 @@
 
         <canvas id="map"></canvas>
         <div id="copyrightNotice"></div>
+
+     <!--Firebase -->
+        <!-- The core Firebase JS SDK is always required and must be listed first -->
+        <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
+
+        <!-- TODO: Add SDKs for Firebase products that you want to use
+            https://firebase.google.com/docs/web/setup#available-libraries -->
+        <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-analytics.js"></script>
+
+        <script>
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        var firebaseConfig = {
+            apiKey: "AIzaSyBqdcAZULn67e2xDpAXw1NO-1Dux64XOp0",
+            authDomain: "money-ball-1c4b7.firebaseapp.com",
+            databaseURL: "https://money-ball-1c4b7.firebaseio.com",
+            projectId: "money-ball-1c4b7",
+            storageBucket: "money-ball-1c4b7.appspot.com",
+            messagingSenderId: "680908302350",
+            appId: "1:680908302350:web:666cea1087f74466d4b45f",
+            measurementId: "G-5LZWLJQMG1"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        firebase.analytics();
+        </script>
+    <!--Firebase -->
     </body>
 </html>
