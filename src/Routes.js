@@ -3,15 +3,15 @@ import {
   Route,
   BrowserRouter as Router,
   Switch,
-  Redirect,
 } from "react-router-dom";
 import Register from "./Pages/Register/Register";
+import Login from "./Pages/Login/Login.js"
 
 const Routes = (props) => (
   <Router {...props}>
     <Switch>
       <Route path="/login">
-        <Register />
+        <Login />
       </Route>
       <Route path="/register">
         <Register />
@@ -23,7 +23,7 @@ const Routes = (props) => (
         <Register />
       </Route>
       <Route path="*">
-        <Register />
+        <Login />
       </Route>
     </Switch>
   </Router>

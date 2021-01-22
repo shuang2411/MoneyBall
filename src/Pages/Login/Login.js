@@ -1,23 +1,22 @@
 import React, { useState,useEffect } from "react";
-import styles from "./Register.module.css";
+import styles from "./Login.module.css";
 
-import { Link } from "react-router-dom";
-import { signUpWIthEmailAndPassword } from "../../Database/userAuthentication.js"; 
-
+import { Link } from "react-router-dom"; 
 
 
 
 
-const Register = (props) => {
+
+const Login = (props) => {
 
   const [user,setUser] = useState("");
   const [email,setEmail] = useState("");
   const [password,setPassword] = useState("");
-  const [RegisterationError,setRegisterationError] = useState("");
+  const [LoginError,setLoginError] = useState("");
   const [hasAccount,setHasAccount] = useState(false);
 
   const clearErrors = () => {
-    setRegisterationError("");
+    setLoginError("");
   }
   
   const clearInputs = () => {
@@ -25,26 +24,18 @@ const Register = (props) => {
     setPassword("");
   }
 
-  const handleRegisteration =  async (e) => {
-    e.preventDefault();
-    try{
-       await signUpWIthEmailAndPassword(email,password)
-    }
-    catch (err) {
-      setRegisterationError(err.message);
-    }
+  const handleLogin = () => {
    
-    
-    
   }
 
   const handleEmailChange = (e) => {
-    setEmail(e.target.value);
+    setEmail(e.target);
   }
 
   const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
+    setPassword(e.target);
   }
+
 
 
   return(
@@ -56,7 +47,7 @@ const Register = (props) => {
         <legend
           className={`${styles.registrationFormLegend} border rounded p-1 text-center`}
         >
-          Registration Form
+          Login Form
         </legend>
         <form>
           <div className="form-group">
@@ -75,20 +66,20 @@ const Register = (props) => {
             <label htmlFor="inputForPassword">Password</label>
             <span className="mandatory">*</span>
             <input
-              type="password"
+              type="password"F
               className="form-control"
               id="inputForPassword"
               placeholder="Enter password"
-              onChange={handlePasswordChange} 
+              onChange={handlePasswordChange}
             />
-            <p className = "errorMsg">{RegisterationError}</p>
+            <p className = "errorMsg">{LoginError}</p>
           </div>
           <div className="d-flex align-items-center justify-content-center">
-            <button onClick={handleRegisteration} className="btn btn-outline-primary">
-              Sign up
+            <button onClick={handleLogin} className="btn btn-outline-primary">
+              Login
             </button>
             <button className="btn btn-link">
-              <Link to="/login">Cancel</Link>
+              <Link to="/register">Sign Up</Link>
             </button>
           </div>
         </form>
@@ -99,4 +90,4 @@ const Register = (props) => {
   
 };
 
-export default Register;
+export default Login;
