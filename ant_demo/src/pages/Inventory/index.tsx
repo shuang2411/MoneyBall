@@ -2,10 +2,10 @@ import ProTable from '@ant-design/pro-table';
 import { db } from "./firebase"
 
 type InventoryItem = {
-    key : number
+    key : number;
     user_id: string;
     card_id: string;
-    count: number
+    count: number;
 };
 
 const Inventory = () => {
@@ -30,11 +30,8 @@ const Inventory = () => {
     const tableListDataSource: InventoryItem[] = [];
 
     async function getData(){
-        const userDocRef = db
-            .collection('users')
-            .doc('dV3xIH6dy51aJBrDxmLD');
 
-        await db.collection("users_cards").where("UserID", "==", userDocRef)
+        await db.collection("users_cards")
             .get()
             .then( async (querySnapshot) => {
                 if(querySnapshot.empty){
