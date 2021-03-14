@@ -43,6 +43,12 @@
     component: './TableList',
   },
   {
+    name: 'inventory',
+    icon: 'table',
+    path: '/inventory',
+    component: './Inventory',
+  },
+  {
     path: '/',
     redirect: '/welcome',
   },
