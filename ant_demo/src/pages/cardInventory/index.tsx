@@ -1,5 +1,6 @@
 import ProTable from '@ant-design/pro-table';
-import { db } from "../../firebase";
+import { db } from "@/services/ant-design-pro/firebase";
+import NewFacilityForm from "@/components/NewFacilityForm"
 
 type Card = {
     key: number
@@ -57,6 +58,9 @@ const CardInventory = () => {
     return(
         <ProTable<Card>
             columns = {columns}
+            toolBarRender={() => [
+                <NewFacilityForm/>
+              ]}
             request = { async (params = {}) => {
                     await getData();
                     console.log("All Cards: ", cards)

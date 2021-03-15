@@ -1,5 +1,5 @@
 import ProTable from '@ant-design/pro-table';
-import { db } from "./firebase"
+import { db } from "@/services/ant-design-pro/firebase"
 
 type InventoryItem = {
     key : number;

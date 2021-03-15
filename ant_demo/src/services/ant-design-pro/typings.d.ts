@@ -98,4 +98,12 @@ declare namespace API {
     description?: string;
     type?: NoticeIconItemType;
   };
+
+  type NewFacility = {
+    name: string;
+    owner: string;
+    listingTime: string
+    cardsNum: number
+    cardsPrice: number
+  }
 }

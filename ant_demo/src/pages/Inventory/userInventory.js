@@ -1,4 +1,4 @@
-import { db } from "./firebase"
+import { db } from "@/services/ant-design-pro/firebase"
 
 export const AddCard = async (_userID,_cardID,_count) => {
     const res = db.collection("users_cards").where("UserID", "==", _userID).where("CardID","==",_cardID).get();
