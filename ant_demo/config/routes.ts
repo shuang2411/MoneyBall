@@ -22,6 +22,12 @@
     component: './Welcome',
   },
   {
+    path: '/cardInventory',
+    name: 'CardInventory',
+    icon: 'plus-square',
+    component: './cardInventory',
+  },
+  {
     path: '/admin',
     name: 'admin',
     icon: 'crown',
