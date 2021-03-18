@@ -60,28 +60,28 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
         history.push('/user/login');
       }
     },
-    links: [
-      <>
-        <LinkOutlined />
-        <span
-          onClick={() => {
-            window.open('/umi/plugin/openapi');
-          }}
-        >
-          openAPI 文档
-        </span>
-      </>,
-      <>
-        <BookOutlined />
-        <span
-          onClick={() => {
-            window.open('/~docs');
-          }}
-        >
-          业务组件文档
-        </span>
-      </>,
-    ],
+    // links: [
+    //   <>
+    //     <LinkOutlined />
+    //     <span
+    //       onClick={() => {
+    //         window.open('/umi/plugin/openapi');
+    //       }}
+    //     >
+    //       openAPI 文档
+    //     </span>
+    //   </>,
+    //   <>
+    //     <BookOutlined />
+    //     <span
+    //       onClick={() => {
+    //         window.open('/~docs');
+    //       }}
+    //     >
+    //       业务组件文档
+    //     </span>
+    //   </>,
+    // ],
     menuHeaderRender: undefined,
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,

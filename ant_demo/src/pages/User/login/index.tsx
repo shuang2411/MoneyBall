@@ -87,7 +87,7 @@ const Login: React.FC = () => {
               <span className={styles.title}>Ant Design</span>
             </Link>
           </div>
-          <div className={styles.desc}>Ant Design 是西湖区最具影响力的 Web 设计规范</div>
+          <div className={styles.desc}>Welecome to the MoneyBall Platform</div>
         </div>
 
         <div className={styles.main}>
@@ -289,10 +289,10 @@ const Login: React.FC = () => {
             </div>
           </ProForm>
           <Space className={styles.other}>
-            <FormattedMessage id="pages.login.loginWith" defaultMessage="其他登录方式" />
+            {/* <FormattedMessage id="pages.login.loginWith" defaultMessage="其他登录方式" />
             <AlipayCircleOutlined className={styles.icon} />
             <TaobaoCircleOutlined className={styles.icon} />
-            <WeiboCircleOutlined className={styles.icon} />
+            <WeiboCircleOutlined className={styles.icon} /> */}
           </Space>
         </div>
       </div>

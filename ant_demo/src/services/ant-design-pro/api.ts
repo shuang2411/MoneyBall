@@ -32,6 +32,8 @@ export async function createNewFacility(newFacility: API.NewFacility, detailedDa
     MediaID: 1
   }
 
+  newCard["DetialedData"] = detailedData
+
   console.log(detailedData)
   detailedData.map((value: any) => {
     newCard[value.category] = value.info

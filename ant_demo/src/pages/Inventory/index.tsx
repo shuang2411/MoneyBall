@@ -110,9 +110,9 @@ const Inventory = () => {
             render: (_, record) => [
                 <a 
                     onClick={async () => {
+                        console.log(record)
                         await sellCard(record.relation_id);
-                        location = location
-                    }}
+                        location = location                    }}
                     key="sell">
                     Sell
                 </a>,
