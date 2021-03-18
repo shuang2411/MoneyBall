@@ -26,7 +26,7 @@ export async function createNewFacility(newFacility: API.NewFacility, detailedDa
     CardID: newFacility.name,
     OwnerId: newFacility.owner,
     ListingTime: newFacility.listingTime,
-    CardsNum: newFacility.cardsNum,
+    NumCardsInMarket: newFacility.cardsNum,
     CardsPrice: newFacility.cardsPrice,
     Level: 1,
     MediaID: 1

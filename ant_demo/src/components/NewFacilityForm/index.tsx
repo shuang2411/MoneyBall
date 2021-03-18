@@ -118,8 +118,8 @@ const NewFacilityForm = () => {
         />
       </ProForm.Group>
       <EditableProTable<DataSourceType>
-        headerTitle="可编辑表格"
         columns={columns}
+        headerTitle=""
         rowKey="id"
         value={dataSource}
         onChange={setDataSource}

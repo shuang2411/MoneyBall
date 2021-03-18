@@ -55,7 +55,6 @@ const EditableInfoForm: React.FC = (props) => {
   return (
     <>
       <EditableProTable<DataSourceType>
-        headerTitle="可编辑表格"
         columns={columns}
         rowKey="id"
         value={dataSource}
