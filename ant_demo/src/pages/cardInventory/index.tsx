@@ -3,11 +3,15 @@ import { db } from "@/services/ant-design-pro/firebase";
 import NewFacilityForm from "@/components/NewFacilityForm"
 
 type Card = {
-    key: number
+    key: number;
     card_id: string;
     media_id: string;
     level: number
-}
+    card_price: string;
+    listed_time: string;
+    count: number;
+    card_doc_ref: string;
+} 
 
 const CardInventory = () => {
     const columns = [
@@ -26,6 +30,38 @@ const CardInventory = () => {
             dataIndex: 'level',
             key: 'level',
         },
+        {
+            title: 'Card Price',
+            dataIndex: 'card_price',
+            key: 'card_price',
+        },
+        {
+            title: 'Listed Time',
+            dataIndex: 'listed_time',
+            key: 'listed_time',
+        },
+        {
+            title: 'Count',
+            dataIndex: 'count',
+            key: 'count',
+        },
+        {
+            title: 'Option',
+            dataIndex: 'option',
+            key: 'option',
+            render: (_, record) => [
+                <a 
+                    onClick = {async () => {
+                        console.log(record);
+                        await buyCard(record.card_doc_ref);
+                        location = location;
+                    }}
+                    key='buy'>
+                    Buy
+                </a>,
+            ],
+        }
+
     ];
 
     const cards: Card[] = [];
@@ -45,6 +81,10 @@ const CardInventory = () => {
                         card_id: doc.data().CardID,
                         media_id: doc.data().MediaID,
                         level: doc.data().Level,
+                        card_price: doc.data().CardsPrice,
+                        listed_time: doc.data().ListingTime,
+                        count: doc.data().Count,
+                        card_doc_ref: doc.id
                     });
                     counter++;
                 }
@@ -53,6 +93,52 @@ const CardInventory = () => {
                 console.log("Error getting documents: ", error);
             });
     };
+
+    async function buyCard(cardDocRefID) {
+        // FIXME: This is hard coded right now
+        // the input of doc should be the argument passed in the function
+        // The following should be used to retrieve inventory ID
+        const userDocRefID = 'dV3xIH6dy51aJBrDxmLD';
+        const card_doc_id = db.collection('cards')
+             .doc(cardDocRefID);
+        // // Retreiving user's inventory
+        // const user_id = (await userDocRef.get()).data().UserID;
+        let CardOriginalCount = -1;
+        // console.log("cardID",cardDocRefID);
+        await db.collection('cards').doc(cardDocRefID).get().then(
+            res => {
+                // console.log("FIX",res.data());
+                CardOriginalCount = res.data().Count;
+            }
+        )
+        
+
+        await db.collection('users_cards')
+            .where('CardID', '==', card_doc_id).where('UserID', '==', userDocRefID)
+            .get()
+            .then(async(querySnapshot) => {
+                // If user has not buy the card before add new doc to users_cards
+                if (querySnapshot.empty) {
+                    await db.collection('users_cards').add({
+                        CardID: card_doc_id,
+                        Count: 1,
+                        UserID: userDocRefID,
+                    })
+                    .catch(function(error) {
+                        console.error("Error adding document: ", error);
+                    });
+                    // Update card collection
+                    await db.collection('cards').doc(cardDocRefID).update({'Count': CardOriginalCount - 1});
+                }
+                // Increase the count in users_cards
+                else {
+                    const oldCount = querySnapshot.docs[0].data()['Count'];
+                    // The query result should only return 1 result
+                    await db.collection('users_cards').doc(querySnapshot.docs[0].id).update({'Count': oldCount + 1});
+                    await db.collection('cards').doc(cardDocRefID).update({'Count': CardOriginalCount - 1});
+                }
+            })
+    }
 
 
     return(
