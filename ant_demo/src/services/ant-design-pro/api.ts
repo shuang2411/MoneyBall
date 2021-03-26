@@ -1,15 +1,14 @@
 // @ts-ignore
 /* eslint-disable */
+import { ApiFilled } from '@ant-design/icons';
 import { values } from 'lodash';
 import { request } from 'umi';
 import { db } from "./firebase";
+import { auth } from "./firebase";
 
 /** 获取当前的用户 GET /api/currentUser */
-export async function currentUser(options?: { [key: string]: any }) {
-  return request<API.CurrentUser>('/api/currentUser', {
-    method: 'GET',
-    ...(options || {}),
-  });
+export function currentUser(options?: { [key: string]: any }) {
+  return  auth.currentUser as API.CurrentUser
 }
 
 /** 此处后端没有提供注释 GET /api/notices */
@@ -26,7 +25,7 @@ export async function createNewFacility(newFacility: API.NewFacility, detailedDa
     CardID: newFacility.name,
     OwnerId: newFacility.owner,
     ListingTime: newFacility.listingTime,
-    NumCardsInMarket: newFacility.cardsNum,
+    Count: newFacility.cardsNum,
     CardsPrice: newFacility.cardsPrice,
     Level: 1,
     MediaID: 1

@@ -60,8 +60,8 @@ const Login: React.FC = () => {
     setSubmitting(true);
     try {
       // 登录
-      const msg = await login({ ...values, type });
-      if (msg.status === 'ok') {
+      const err = await login({ ...values, type });
+      if (err !== null) {
         message.success('登录成功！');
         await fetchUserInfo();
         goto();

@@ -70,7 +70,7 @@ const Inventory = () => {
                     message.error("Trade fails (not enough card)")
                     return;
                 }
-                const oldCount = querySnapshot.data().["Count"];
+                const oldCount = querySnapshot.data()["Count"];
                 if(oldCount == 1){
                     await db.collection('users_cards')
                         .doc(relation_id)

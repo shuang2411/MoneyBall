@@ -1,6 +1,7 @@
 // @ts-ignore
 /* eslint-disable */
 import { request } from 'umi';
+import { auth } from "@/services/ant-design-pro/firebase"
 
 /** 发送验证码 POST /api/login/captcha */
 export async function getFakeCaptcha(
@@ -29,13 +30,11 @@ export async function outLogin(options?: { [key: string]: any }) {
 }
 
 /** 登录接口 POST /api/login/account */
-export async function login(body: API.LoginParams, options?: { [key: string]: any }) {
-  return request<API.LoginResult>('/api/login/account', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-    ...(options || {}),
+export async function login(param: API.LoginParams, options?: { [key: string]: any }) {
+
+  auth.signInWithEmailAndPassword(param.email, param.password)
+  .catch((error) => {
+    return error
   });
+
 }
