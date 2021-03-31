@@ -31,6 +31,7 @@ export async function outLogin(options?: { [key: string]: any }) {
 
 /** 登录接口 POST /api/login/account */
 export async function login(param: API.LoginParams, options?: { [key: string]: any }) {
+  console.log(param.email)
 
   auth.signInWithEmailAndPassword(param.email, param.password)
   .catch((error) => {

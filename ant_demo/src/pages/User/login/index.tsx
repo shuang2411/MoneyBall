@@ -42,6 +42,8 @@ const Login: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
+
+
   const { initialState, setInitialState } = useModel('@@initialState');
 
   const intl = useIntl();
@@ -61,6 +63,8 @@ const Login: React.FC = () => {
     try {
       // 登录
       const err = await login({ ...values, type });
+      console.log("222222")
+      console.log(err)
       if (err !== null) {
         message.success('登录成功！');
         await fetchUserInfo();
@@ -68,7 +72,7 @@ const Login: React.FC = () => {
         return;
       }
       // 如果失败去设置用户错误信息
-      setUserLoginState(msg);
+      setUserLoginState(err);
     } catch (error) {
       message.error('登录失败，请重试！');
     }
@@ -112,6 +116,7 @@ const Login: React.FC = () => {
               },
             }}
             onFinish={async (values) => {
+              console.log(values as API.LoginParams)
               handleSubmit(values as API.LoginParams);
             }}
           >
@@ -143,14 +148,14 @@ const Login: React.FC = () => {
             {type === 'account' && (
               <>
                 <ProFormText
-                  name="username"
+                  name="email"
                   fieldProps={{
                     size: 'large',
                     prefix: <UserOutlined className={styles.prefixIcon} />,
                   }}
                   placeholder={intl.formatMessage({
                     id: 'pages.login.username.placeholder',
-                    defaultMessage: '用户名: admin or user',
+                    defaultMessage: '用户名: zzm@gmail.edu',
                   })}
                   rules={[
                     {
@@ -172,7 +177,7 @@ const Login: React.FC = () => {
                   }}
                   placeholder={intl.formatMessage({
                     id: 'pages.login.password.placeholder',
-                    defaultMessage: '密码: ant.design',
+                    defaultMessage: '密码: 123456',
                   })}
                   rules={[
                     {
