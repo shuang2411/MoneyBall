@@ -155,6 +155,7 @@ const Inventory = () => {
                 <a 
                     onClick={async () => {
                         await sellCard(record.card_id);
+                        location = location;
                     }}
                     key="sell">
                     Sell
