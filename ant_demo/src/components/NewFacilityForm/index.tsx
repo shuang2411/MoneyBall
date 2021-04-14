@@ -43,13 +43,14 @@ const NewFacilityForm = () => {
   );
   const columns: ProColumns<DataSourceType>[] = [
     {
-      title: "Category",
-      dataIndex: "category",
+      title: "Feature",
+      dataIndex: "feature",
       width: "30%"
     },
     {
       title: "Information",
-      dataIndex: "info"
+      dataIndex: "info",
+      width: "60%"
     },
     {
       title: "Delete",
@@ -69,11 +70,11 @@ const NewFacilityForm = () => {
 
   return (
     <ModalForm<API.NewFacility>
-      title="Create a new facility"
+      title="Claim a new facility"
       trigger={
         <Button type="primary">
           <PlusOutlined />
-          Create a new facility
+          Claim a new facility
         </Button>
       }
       modalProps={{

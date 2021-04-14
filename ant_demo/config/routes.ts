@@ -42,17 +42,17 @@
       },
     ],
   },
-  // {
-  //   name: 'list.table-list',
-  //   icon: 'table',
-  //   path: '/list',
-  //   component: './TableList',
-  // },
   {
     name: 'inventory',
     icon: 'table',
     path: '/inventory',
     component: './Inventory',
+  },
+  {
+    name: 'Map',
+    icon: 'CompassOutlined',
+    path: '/map',
+    component: './map',
   },
   {
     path: '/',
