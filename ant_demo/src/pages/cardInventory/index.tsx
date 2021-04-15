@@ -200,55 +200,7 @@ const CardInventory = () => {
             }
             search={false}
         ></ProTable>
-        <ModalForm<{
-            amount: number;
-            price: number;
-        }>
-        title="Sell cards"
-        visible={createModalVisible}
-        onVisibleChange={handleModalVisible}
-        modalProps={{
-            onCancel: () => console.log('run'),
-        }}
-        onFinish={async (values) => {
-            await waitTime(1000);
-            await sellCard(card_uid, Number(values.amount), Number(values.price));
-            console.log(card_uid);
-            message.success('Order submitted');
-            location = location;
-            return true;
-        }}
-        >
-        <ProForm.Group>
-            <ProFormText
-            rules={[
-                {
-                required: true,
-                // type: 'integer',
-                },
-            ]}
-            width="md"
-            name="amount"
-            label="Amount to sell"
-            tooltip="Enter the number of cards to sell"
-            placeholder="e.g.123"
-            />
-
-        <ProFormText
-            rules={[
-                {
-                required: true,
-                // type: 'integer',
-                },
-            ]}
-            width="md"
-            name="price"
-            label="Price to sell per card (Unit: USD)"
-            tooltip="Enter the price"
-            placeholder="e.g.123"
-            /> 
-        </ProForm.Group>
-    </ModalForm>
+      
     </div>
     )
 };

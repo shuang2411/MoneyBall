@@ -1,6 +1,11 @@
 import ProTable from '@ant-design/pro-table';
 import { db } from "@/services/ant-design-pro/firebase"
-import { message } from 'antd'
+import { Button, message } from 'antd';
+import ProForm, {
+    ModalForm,
+    ProFormText,
+  } from '@ant-design/pro-form';
+  import React, { useState } from 'react';
 
 
 type InventoryItem = {
@@ -14,7 +19,9 @@ type InventoryItem = {
 };
 
 const Inventory = () => {
-    
+    const [createModalVisible, handleModalVisible] = useState<boolean>(false);
+    const [card_uid, handleCardUid] = useState<string>("");
+
     async function getData(){
 
         await db.collection("users_cards")
@@ -108,23 +115,43 @@ const Inventory = () => {
             dataIndex: 'option',
             key: 'option',
             render: (_, record) => [
-                <a 
-                    onClick={async () => {
-                        console.log(record)
-                        await sellCard(record.relation_id);
-                        location = location                    }}
-                    key="sell">
-                    Sell
-                </a>,
+                <Button type="primary"
+                    onClick = {async () => {
+                        console.log(record);
+                        handleModalVisible(true);
+                        handleCardUid(record.card_doc_ref);
+                        // await test(record.card_doc_ref, sellAmount, sellPrice);
+                        // await sellCard(record.card_doc_ref, sellAmount, sellPrice);
+                }}
+                key='sell'>
+                Sell
+                </Button>,
               ],
         },
     ];
     
     const tableListDataSource: InventoryItem[] = [];
 
+        
+    async function sellCard(card_uid, sellAmount, sellPrice) {
+        await db.collection('cards')
+            .doc(card_uid)
+            .get()
+            .then(async(querySnapshot) => {
+                if(querySnapshot.empty){
+                    console.log("Cannot find the card in user inventory");
+                    return;
+                }
+                const oldCount = querySnapshot.data().Count;
+                await db.collection('cards').doc(card_uid).update({'Count': Number(oldCount) + Number(sellAmount)});
+                console.log(sellPrice);
+            });
+    }
 
 
     return(
+        
+        <div className = "cards">
         <ProTable<InventoryItem>
             columns = {columns}
             request = { async (params = {}) => {
@@ -137,6 +164,57 @@ const Inventory = () => {
             }
             search={false}
         ></ProTable>
+        <ModalForm<{
+            amount: number;
+            price: number;
+        }>
+        title="Sell cards"
+        visible={createModalVisible}
+        onVisibleChange={handleModalVisible}
+        modalProps={{
+            onCancel: () => console.log('run'),
+        }}
+        onFinish={async (values) => {
+            await sellCard(card_uid, Number(values.amount), Number(values.price));
+            console.log(card_uid);
+            message.success('Order submitted');
+            location = location;
+            return true;
+        }}
+        >
+        <ProForm.Group>
+            <ProFormText
+            rules={[
+                {
+                required: true,
+                // type: 'integer',
+                },
+            ]}
+            width="md"
+            name="amount"
+            label="Amount to sell"
+            tooltip="Enter the number of cards to sell"
+            placeholder="e.g.123"
+            />
+
+        <ProFormText
+            rules={[
+                {
+                required: true,
+                // type: 'integer',
+                },
+            ]}
+            width="md"
+            name="price"
+            label="Price to sell per card (Unit: USD)"
+            tooltip="Enter the price"
+            placeholder="e.g.123"
+            /> 
+        </ProForm.Group>
+    </ModalForm>
+        </div>
+        
+        
     )
 };
 
