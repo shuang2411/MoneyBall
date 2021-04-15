@@ -158,11 +158,6 @@ const CardInventory = () => {
             }
             search={false}
         ></ProTable>
-<<<<<<< HEAD
-      
-    </div>
-=======
->>>>>>> parent of 20f52b4... sell with number of cards and price
     )
 };
 
