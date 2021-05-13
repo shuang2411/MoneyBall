@@ -7,7 +7,7 @@ import { db } from "./firebase";
 import { auth } from "./firebase";
 
 /** 获取当前的用户 GET /api/currentUser */
-export function currentUser(options?: { [key: string]: any }) {
+export function currentUser() {
   return  auth.currentUser as API.CurrentUser
 }
 
@@ -19,6 +19,43 @@ export async function getNotices(options?: { [key: string]: any }) {
   });
 }
 
+export async function getAllFacility(): Promise<API.NewFacility[]> {
+
+  const facilities:  API.NewFacility[] = [];
+
+
+  const querySnapshot = await db.collection("cards").get()
+  
+  if(querySnapshot.empty){
+    console.log("No document");
+  }
+
+  for (const doc of querySnapshot.docs){
+      console.log("Cards: ", doc.data());
+
+      const facility : API.NewFacility = {
+        name: doc.data().CardID,
+        owner: doc.data().OwnerId,
+        listingTime: doc.data().ListingTime,
+        cardsNum: doc.data().Count,
+        cardsPrice: doc.data().CardsPrice,
+        isClaimed: doc.data().IsClaimed,
+        minimumTotalValue: doc.data().MinimumTotalValue,
+        latitude:  doc.data().Latitude,
+        longitude: doc.data().Longitude,
+        level: doc.data().Level,
+        mediaID: doc.data().MediaID,
+        docRef: doc.id
+      }
+
+      facilities.push(facility);
+     
+  }
+    
+    return facilities;
+        
+}
+
 export async function createNewFacility(newFacility: API.NewFacility, detailedData?: any){
 
   var newCard =  {
@@ -27,22 +64,110 @@ export async function createNewFacility(newFacility: API.NewFacility, detailedDa
     ListingTime: newFacility.listingTime,
     Count: newFacility.cardsNum,
     CardsPrice: newFacility.cardsPrice,
+    IsClaimed: true,
+    MinimumTotalValue:0,
+    Latitude:  newFacility.latitude,
+    Longitude: newFacility.longitude,
     Level: 1,
     MediaID: 1
   }
 
   newCard["DetialedData"] = detailedData
 
-  console.log(detailedData)
-  detailedData.map((value: any) => {
-    newCard[value.category] = value.info
-    }
-  )
-  console.log(newCard)
+  // console.log(detailedData)
+  // detailedData.map((value: any) => {
+  //   newCard[value.category] = value.info
+  //   }
+  // )
+  // console.log(newCard)
 
   db.collection("cards").add(
     newCard
 ).then(() =>  {
     //console.log("Document added with ID ", CardID);
 })
+}
+
+export async function updateFacility(newValue, detailedData?:any, docRef){
+
+  var newCard =  {
+    CardID: newValue.name,
+    OwnerId: newValue.owner,
+    ListingTime: newValue.listingTime,
+    Count: newValue.cardsNum,
+    CardsPrice: newValue.cardsPrice,
+    IsClaimed: true,
+    MinimumTotalValue:0,
+    Latitude:  newValue.latitude,
+    Longitude: newValue.longitude,
+    Level: 1,
+    MediaID: 1
+  }
+
+  newCard["DetialedData"] = detailedData
+
+  // console.log(detailedData)
+  // detailedData.map((value: any) => {
+  //   newCard[value.category] = value.info
+  //   }
+  // )
+  console.log("the doc ref is",docRef)
+
+  db.collection("cards").doc(docRef).update(
+    newCard
+).then(() =>  {
+    //console.log("Document added with ID ", CardID);
+})
+}
+
+
+export async function buyCard(cardDocRefID) {
+  // FIXME: This is hard coded right now
+  // the input of doc should be the argument passed in the function
+  // The following should be used to retrieve inventory ID
+
+
+  console.log(cardDocRefID)
+
+  const userDocRefID = 'dV3xIH6dy51aJBrDxmLD';
+  const card_doc_id = db.collection('cards')
+       .doc(cardDocRefID);
+  // // Retreiving user's inventory
+  // const user_id = (await userDocRef.get()).data().UserID;
+  let CardOriginalCount = -1;
+  // console.log("cardID",cardDocRefID);
+  await db.collection('cards').doc(cardDocRefID).get().then(
+      res => {
+          // console.log("FIX",res.data());
+          CardOriginalCount = res.data().Count;
+      }
+  )
+  
+
+  await db.collection('users_cards')
+      .where('CardID', '==', card_doc_id).where('UserID', '==', userDocRefID)
+      .get()
+      .then(async(querySnapshot) => {
+          // If user has not buy the card before add new doc to users_cards
+          console.log("Find user")
+          if (querySnapshot.empty) {
+              await db.collection('users_cards').add({
+                  CardID: card_doc_id,
+                  Count: 1,
+                  UserID: userDocRefID,
+              })
+              .catch(function(error) {
+                  console.error("Error adding document: ", error);
+              });
+              // Update card collection
+              await db.collection('cards').doc(cardDocRefID).update({'Count': CardOriginalCount - 1});
+          }
+          // Increase the count in users_cards
+          else {
+              const oldCount = querySnapshot.docs[0].data()['Count'];
+              // The query result should only return 1 result
+              await db.collection('users_cards').doc(querySnapshot.docs[0].id).update({'Count': oldCount + 1});
+              await db.collection('cards').doc(cardDocRefID).update({'Count': CardOriginalCount - 1});
+          }
+      })
 }

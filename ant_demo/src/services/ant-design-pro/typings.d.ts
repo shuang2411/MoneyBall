@@ -102,8 +102,21 @@ declare namespace API {
   type NewFacility = {
     name: string;
     owner: string;
-    listingTime: string
-    cardsNum: number
-    cardsPrice: number
+    listingTime: string;
+    cardsNum: number;
+    cardsPrice: number;
+    isClaimed: boolean;
+    minimumTotalValue: number;
+    longitude: number;
+    latitude: number; 
+    level: number;
+    mediaID: number;
+    docRef: string;
   }
+
+  // type Card = {
+  //   key: number;
+  //   card_doc_ref: string;
+  //   facility: NewFacility;
+  // } 
 }

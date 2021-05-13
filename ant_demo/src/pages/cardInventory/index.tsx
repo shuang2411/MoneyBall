@@ -1,4 +1,5 @@
 import ProTable from '@ant-design/pro-table';
+import NewFacilityForm from "@/components/NewFacilityForm"
 import { Button, message } from 'antd';
 import { db } from "@/services/ant-design-pro/firebase";
 import React, { useState } from 'react';
@@ -6,6 +7,7 @@ import ProForm, {
     ModalForm,
     ProFormText,
   } from '@ant-design/pro-form';
+import {buyCard} from "@/services/ant-design-pro/api"
 
 const waitTime = (time: number = 100) => {
     return new Promise((resolve) => {
@@ -71,22 +73,11 @@ const CardInventory = () => {
                         await buyCard(record.card_doc_ref);
                         await waitTime(1000);
                         message.success("Order submitted");
-                        location = location;
+                        //location = location;
                     }}
                     key='buy'>
                     Buy
-                </Button>,
-                <Button type="primary"
-                    onClick = {async () => {
-                        console.log(record);
-                        handleModalVisible(true);
-                        handleCardUid(record.card_doc_ref);
-                        // await test(record.card_doc_ref, sellAmount, sellPrice);
-                        // await sellCard(record.card_doc_ref, sellAmount, sellPrice);
-                }}
-                key='sell'>
-                Sell
-            </Button>,
+                </Button>
             ],
         }
 
@@ -122,51 +113,51 @@ const CardInventory = () => {
             });
     };
 
-    async function buyCard(cardDocRefID) {
-        // FIXME: This is hard coded right now
-        // the input of doc should be the argument passed in the function
-        // The following should be used to retrieve inventory ID
-        const userDocRefID = 'dV3xIH6dy51aJBrDxmLD';
-        const card_doc_id = db.collection('cards')
-             .doc(cardDocRefID);
-        // // Retreiving user's inventory
-        // const user_id = (await userDocRef.get()).data().UserID;
-        let CardOriginalCount = -1;
-        // console.log("cardID",cardDocRefID);
-        await db.collection('cards').doc(cardDocRefID).get().then(
-            res => {
-                // console.log("FIX",res.data());
-                CardOriginalCount = res.data().Count;
-            }
-        )
+    // async function buyCard(cardDocRefID) {
+    //     // FIXME: This is hard coded right now
+    //     // the input of doc should be the argument passed in the function
+    //     // The following should be used to retrieve inventory ID
+    //     const userDocRefID = 'dV3xIH6dy51aJBrDxmLD';
+    //     const card_doc_id = db.collection('cards')
+    //          .doc(cardDocRefID);
+    //     // // Retreiving user's inventory
+    //     // const user_id = (await userDocRef.get()).data().UserID;
+    //     let CardOriginalCount = -1;
+    //     // console.log("cardID",cardDocRefID);
+    //     await db.collection('cards').doc(cardDocRefID).get().then(
+    //         res => {
+    //             // console.log("FIX",res.data());
+    //             CardOriginalCount = res.data().Count;
+    //         }
+    //     )
         
 
-        await db.collection('users_cards')
-            .where('CardID', '==', card_doc_id).where('UserID', '==', userDocRefID)
-            .get()
-            .then(async(querySnapshot) => {
-                // If user has not buy the card before add new doc to users_cards
-                if (querySnapshot.empty) {
-                    await db.collection('users_cards').add({
-                        CardID: card_doc_id,
-                        Count: 1,
-                        UserID: userDocRefID,
-                    })
-                    .catch(function(error) {
-                        console.error("Error adding document: ", error);
-                    });
-                    // Update card collection
-                    await db.collection('cards').doc(cardDocRefID).update({'Count': CardOriginalCount - 1});
-                }
-                // Increase the count in users_cards
-                else {
-                    const oldCount = querySnapshot.docs[0].data()['Count'];
-                    // The query result should only return 1 result
-                    await db.collection('users_cards').doc(querySnapshot.docs[0].id).update({'Count': oldCount + 1});
-                    await db.collection('cards').doc(cardDocRefID).update({'Count': CardOriginalCount - 1});
-                }
-            })
-    }
+    //     await db.collection('users_cards')
+    //         .where('CardID', '==', card_doc_id).where('UserID', '==', userDocRefID)
+    //         .get()
+    //         .then(async(querySnapshot) => {
+    //             // If user has not buy the card before add new doc to users_cards
+    //             if (querySnapshot.empty) {
+    //                 await db.collection('users_cards').add({
+    //                     CardID: card_doc_id,
+    //                     Count: 1,
+    //                     UserID: userDocRefID,
+    //                 })
+    //                 .catch(function(error) {
+    //                     console.error("Error adding document: ", error);
+    //                 });
+    //                 // Update card collection
+    //                 await db.collection('cards').doc(cardDocRefID).update({'Count': CardOriginalCount - 1});
+    //             }
+    //             // Increase the count in users_cards
+    //             else {
+    //                 const oldCount = querySnapshot.docs[0].data()['Count'];
+    //                 // The query result should only return 1 result
+    //                 await db.collection('users_cards').doc(querySnapshot.docs[0].id).update({'Count': oldCount + 1});
+    //                 await db.collection('cards').doc(cardDocRefID).update({'Count': CardOriginalCount - 1});
+    //             }
+    //         })
+    // }
 
     
     async function sellCard(card_uid, sellAmount, sellPrice) {
@@ -187,6 +178,7 @@ const CardInventory = () => {
 
     return(
         <div className = "cards">
+        <NewFacilityForm />
         <ProTable<Card>
             columns = {columns}
             request = { async (params = {}) => {
