@@ -5,6 +5,7 @@ import {buyCard} from "@/services/ant-design-pro/api"
 const FacilityDetailDrawer : React.FC = (props) => {
   const [visible, setVisible] = useState(false);
   const [facility, setFacility] = useState(props.Facility)
+  {console.log("123:",facility)}
   const showDrawer = () => {
     setVisible(true);
   };
@@ -27,6 +28,11 @@ const FacilityDetailDrawer : React.FC = (props) => {
         <p>{facility.ListingTime}</p>
         <p>{facility.cardsNum}</p>
         <p>{facility.cardsPrice}</p>
+
+        {facility.detail.map((d) => (
+            console.log(d),
+            <p>{d.feature}: {d.info}</p>
+            ))}
 
         {/*TODO::render the detailed information*/}
         <Button type="primary"

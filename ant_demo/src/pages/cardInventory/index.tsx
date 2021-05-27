@@ -117,7 +117,7 @@ const CardInventory = () => {
     //     // FIXME: This is hard coded right now
     //     // the input of doc should be the argument passed in the function
     //     // The following should be used to retrieve inventory ID
-    //     const userDocRefID = 'dV3xIH6dy51aJBrDxmLD';
+    //     const userDocRefID = 'w4y9aZQMTcYX02RlRZODAtsTI0F3';
     //     const card_doc_id = db.collection('cards')
     //          .doc(cardDocRefID);
     //     // // Retreiving user's inventory

@@ -31,7 +31,7 @@ export async function getAllFacility(): Promise<API.NewFacility[]> {
   }
 
   for (const doc of querySnapshot.docs){
-      console.log("Cards: ", doc.data());
+     
 
       const facility : API.NewFacility = {
         name: doc.data().CardID,
@@ -45,8 +45,12 @@ export async function getAllFacility(): Promise<API.NewFacility[]> {
         longitude: doc.data().Longitude,
         level: doc.data().Level,
         mediaID: doc.data().MediaID,
-        docRef: doc.id
+        docRef: doc.id,
+        detail: doc.data().DetialedData,
       }
+
+      console.log("Cards: ", doc.data());
+      console.log("detail: ", facility.detail);
 
       facilities.push(facility);
      
@@ -122,52 +126,49 @@ export async function updateFacility(newValue, detailedData?:any, docRef){
 
 
 export async function buyCard(cardDocRefID) {
-  // FIXME: This is hard coded right now
-  // the input of doc should be the argument passed in the function
-  // The following should be used to retrieve inventory ID
+  // TODO:: redo the entire buycard method, use collecton inventory instead of user_cards
 
+  // console.log(cardDocRefID)
 
-  console.log(cardDocRefID)
-
-  const userDocRefID = 'dV3xIH6dy51aJBrDxmLD';
-  const card_doc_id = db.collection('cards')
-       .doc(cardDocRefID);
-  // // Retreiving user's inventory
-  // const user_id = (await userDocRef.get()).data().UserID;
-  let CardOriginalCount = -1;
-  // console.log("cardID",cardDocRefID);
-  await db.collection('cards').doc(cardDocRefID).get().then(
-      res => {
-          // console.log("FIX",res.data());
-          CardOriginalCount = res.data().Count;
-      }
-  )
+  // const userDocRefID = 'w4y9aZQMTcYX02RlRZODAtsTI0F3';
+  // const card_doc_id = db.collection('cards')
+  //      .doc(cardDocRefID);
+  // // // Retreiving user's inventory
+  // // const user_id = (await userDocRef.get()).data().UserID;
+  // let CardOriginalCount = -1;
+  // // console.log("cardID",cardDocRefID);
+  // await db.collection('cards').doc(cardDocRefID).get().then(
+  //     res => {
+  //         // console.log("FIX",res.data());
+  //         CardOriginalCount = res.data().Count;
+  //     }
+  // )
   
 
-  await db.collection('users_cards')
-      .where('CardID', '==', card_doc_id).where('UserID', '==', userDocRefID)
-      .get()
-      .then(async(querySnapshot) => {
-          // If user has not buy the card before add new doc to users_cards
-          console.log("Find user")
-          if (querySnapshot.empty) {
-              await db.collection('users_cards').add({
-                  CardID: card_doc_id,
-                  Count: 1,
-                  UserID: userDocRefID,
-              })
-              .catch(function(error) {
-                  console.error("Error adding document: ", error);
-              });
-              // Update card collection
-              await db.collection('cards').doc(cardDocRefID).update({'Count': CardOriginalCount - 1});
-          }
-          // Increase the count in users_cards
-          else {
-              const oldCount = querySnapshot.docs[0].data()['Count'];
-              // The query result should only return 1 result
-              await db.collection('users_cards').doc(querySnapshot.docs[0].id).update({'Count': oldCount + 1});
-              await db.collection('cards').doc(cardDocRefID).update({'Count': CardOriginalCount - 1});
-          }
-      })
+  // await db.collection('users_cards')
+  //     .where('CardID', '==', card_doc_id).where('UserID', '==', userDocRefID)
+  //     .get()
+  //     .then(async(querySnapshot) => {
+  //         // If user has not buy the card before add new doc to users_cards
+  //         console.log("Find user")
+  //         if (querySnapshot.empty) {
+  //             await db.collection('users_cards').add({
+  //                 CardID: card_doc_id,
+  //                 Count: 1,
+  //                 UserID: userDocRefID,
+  //             })
+  //             .catch(function(error) {
+  //                 console.error("Error adding document: ", error);
+  //             });
+  //             // Update card collection
+  //             await db.collection('cards').doc(cardDocRefID).update({'Count': CardOriginalCount - 1});
+  //         }
+  //         // Increase the count in users_cards
+  //         else {
+  //             const oldCount = querySnapshot.docs[0].data()['Count'];
+  //             // The query result should only return 1 result
+  //             await db.collection('users_cards').doc(querySnapshot.docs[0].id).update({'Count': oldCount + 1});
+  //             await db.collection('cards').doc(cardDocRefID).update({'Count': CardOriginalCount - 1});
+  //         }
+  //     })
 }

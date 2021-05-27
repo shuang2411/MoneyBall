@@ -112,6 +112,7 @@ declare namespace API {
     level: number;
     mediaID: number;
     docRef: string;
+    detail: []
   }
 
   // type Card = {
