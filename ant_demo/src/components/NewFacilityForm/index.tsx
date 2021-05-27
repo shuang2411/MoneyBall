@@ -4,22 +4,12 @@ import ProForm, {
   ModalForm,
   ProFormText,
   ProFormDatePicker,
-  ProFormSelect
+  ProFormCheckbox
 } from "@ant-design/pro-form";
 import { PlusOutlined } from "@ant-design/icons";
-import {createNewFacility} from "@/services/ant-design-pro/api"
+import {createNewFacility,updateFacility} from "@/services/ant-design-pro/api"
 import type { ProColumns } from "@ant-design/pro-table";
 import { EditableProTable } from "@ant-design/pro-table";
-
-const waitTime = (time: number = 100) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(true);
-    }, time);
-  });
-};
-
-
 
 type DataSourceType = {
   id: React.Key;
@@ -33,7 +23,7 @@ const defaultData: DataSourceType[] = [
   
 ];
 
-const NewFacilityForm = () => {
+const NewFacilityForm = (props) => {
   
   const [editableKeys, setEditableRowKeys] = useState<React.Key[]>(() =>
     defaultData.map((item) => item.id)
@@ -41,6 +31,9 @@ const NewFacilityForm = () => {
   const [dataSource, setDataSource] = useState<DataSourceType[]>(
     () => defaultData
   );
+
+  const [facility, setFacility] = useState<API.NewFacility>(props.Facility);
+
   const columns: ProColumns<DataSourceType>[] = [
     {
       title: "Feature",
@@ -77,13 +70,46 @@ const NewFacilityForm = () => {
           Claim a new facility
         </Button>
       }
+      initialValues={{
+        'name': facility === undefined? "": facility.name,
+        'owner':facility === undefined? "": facility.owner,
+        'listingTime':facility === undefined? "": facility.listingTime,
+        'cardsNum': facility === undefined? "": facility.cardsNum,
+        'cardsPrice':facility === undefined? "": facility.cardsPrice,
+        "latitude":facility === undefined? "": facility.latitude,
+        "longitude": facility === undefined? "": facility.longitude,
+      }}
       modalProps={{
         onCancel: () => console.log("run")
       }}
       onFinish={async (values) => {
-        await createNewFacility(values,dataSource)
+
+        if (facility === undefined){
+          await createNewFacility(values,dataSource)
+        } else {
+          console.log("Try to update a facility")
+          await updateFacility(values,dataSource,facility.docRef)
+        }
+        if(props.onFinish){
+          props.onFinish()
+        }
         return true;
       }}
+      rules={[
+        ({ getFieldValue }) => ({
+          validator() {
+
+            if(!facility.minimumTotalValue){
+              return Promise.resolve();
+            }
+            
+            if(facility.minimumTotalValue < getFieldValue('cardsNum') * getFieldValue('cardsPrice')){
+              return Promise.reject(new Error('The total value you proposed must be bigger than the minimum value'));
+            }
+            return Promise.resolve();
+          },
+        }),
+      ]}
     >
       <ProForm.Group>
         <ProFormText
@@ -114,8 +140,22 @@ const NewFacilityForm = () => {
         <ProFormText
           width="md"
           name="cardsPrice"
-          label="Price per card"
+          label={`Price per card \n Minimum total value is ${facility === undefined? "0" : facility.minimumTotalValue}`}
           placeholder="Price of cards in USD"
+        />
+      </ProForm.Group>
+      <ProForm.Group>
+        <ProFormText
+          width="md"
+          name="latitude"
+          label="The latitude of the facility"
+          placeholder="The latitude of the facility"
+        />
+        <ProFormText
+          width="md"
+          name="longitude"
+          label="The longitude of the facility"
+          placeholder="The longitude of the facility"
         />
       </ProForm.Group>
       <EditableProTable<DataSourceType>
@@ -130,20 +170,6 @@ const NewFacilityForm = () => {
             id: Date.now(),
           }),
         }}
-        // toolBarRender={() => {
-        //   return [
-        //     <Button
-        //       type="primary"
-        //       key="save"
-        //       onClick={() => {
-        //         // dataSource 就是当前数据，可以调用 api 将其保存
-        //         console.log(dataSource);
-        //       }}
-        //     >
-        //       保存数据
-        //     </Button>,
-        //   ];
-        // }}
         editable={{
           type: 'multiple',
           editableKeys,
@@ -156,6 +182,7 @@ const NewFacilityForm = () => {
           onChange: setEditableRowKeys,
         }}
       />
+      
     </ModalForm>
   );
 };
